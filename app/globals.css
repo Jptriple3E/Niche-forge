@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f1f0ea;
+  color: #1c2b22;
+}
+
+::selection {
+  background-color: #c08a2e;
+  color: #f1f0ea;
+}
+
+/* visible keyboard focus everywhere */
+a:focus-visible,
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  outline: 2px solid #c08a2e;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.prose-field h1,
+.prose-field h2,
+.prose-field h3 {
+  font-family: "Fraunces", serif;
+  color: #1c2b22;
+  font-weight: 600;
+}
+
+.prose-field h1 {
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-field h2 {
+  font-size: 1.2rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-field h3 {
+  font-size: 1.05rem;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.prose-field p {
+  margin-bottom: 0.6rem;
+  line-height: 1.65;
+}
+
+.prose-field ul,
+.prose-field ol {
+  margin-bottom: 0.75rem;
+  padding-left: 1.4rem;
+}
+
+.prose-field li {
+  margin-bottom: 0.3rem;
+  line-height: 1.55;
+}
+
+.prose-field strong {
+  color: #1c2b22;
+  font-weight: 700;
+}
+
+.prose-field hr {
+  border-color: #d8d5c8;
+  margin: 1.5rem 0;
+}

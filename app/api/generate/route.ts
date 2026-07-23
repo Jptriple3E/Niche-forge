@@ -1,19 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generate } from "@/lib/ai";
-import { buildPrompt, Task } from "@/lib/prompts";
+import { generateJSON } from "@/lib/ai";
+import { buildCorePrompt, buildExpansionPrompt } from "@/lib/prompts";
+import { Report } from "@/lib/types";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const VALID_TASKS: Task[] = [
-  "niche-research",
-  "validation",
-  "pain-points",
-  "product-ideas",
-  "outline",
-  "sales-page",
-  "marketing",
-];
+type CorePart = Omit<
+  Report,
+  | "id"
+  | "createdAt"
+  | "niche"
+  | "salesCopy"
+  | "marketingAngles"
+  | "socialPosts"
+  | "emailSequence"
+  | "youtubeIdeas"
+  | "launchRoadmap"
+  | "ninetyDayChecklist"
+>;
+
+type ExpansionPart = Pick<
+  Report,
+  "salesCopy" | "marketingAngles" | "socialPosts" | "emailSequence" | "youtubeIdeas" | "launchRoadmap" | "ninetyDayChecklist"
+>;
 
 export async function POST(req: NextRequest) {
   let body: any;
@@ -23,24 +33,34 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { task, input } = body || {};
-
-  if (!task || !VALID_TASKS.includes(task)) {
-    return NextResponse.json(
-      { error: `task must be one of: ${VALID_TASKS.join(", ")}` },
-      { status: 400 }
-    );
-  }
-
-  if (!input || typeof input !== "object") {
-    return NextResponse.json({ error: "input object is required" }, { status: 400 });
+  const niche: string = body?.niche;
+  if (!niche || typeof niche !== "string" || !niche.trim()) {
+    return NextResponse.json({ error: "A niche is required" }, { status: 400 });
   }
 
   try {
-    const { system, user } = buildPrompt(task as Task, input);
-    const { text, provider } = await generate(system, user);
-    return NextResponse.json({ result: text, provider });
+    const corePrompt = buildCorePrompt(niche);
+    const core = await generateJSON<CorePart>(corePrompt.system, corePrompt.user);
+
+    const expansionPrompt = buildExpansionPrompt(niche, {
+      productTitle: core.productTitle,
+      productDescription: core.productDescription,
+      audienceSegments: core.audienceSegments,
+      painPoints: core.painPoints,
+      chapters: core.chapters,
+    });
+    const expansion = await generateJSON<ExpansionPart>(expansionPrompt.system, expansionPrompt.user);
+
+    const report: Report = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      createdAt: new Date().toISOString(),
+      niche,
+      ...core,
+      ...expansion,
+    };
+
+    return NextResponse.json({ report });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message || "Generation failed" }, { status: 502 });
+    return NextResponse.json({ error: err.message || "Research generation failed" }, { status: 502 });
   }
-}
+      }

@@ -54,7 +54,6 @@ Return ONLY a JSON object with this exact shape:
 Make every field specific to "${niche}" — nothing generic enough to paste into a different niche's report.`,
   };
 }
-
 /**
  * Stage 2: everything needed to sell and launch the product from stage 1.
  * Takes the stage-1 result as context so the copy is grounded in the real
@@ -75,3 +74,28 @@ Pain points: ${JSON.stringify(core.painPoints)}
 Chapter titles: ${JSON.stringify(
       Array.isArray(core.chapters) ? (core.chapters as any[]).map((c) => c.title) : []
     )}
+
+Generate the complete sales, marketing, and launch kit for it. Return ONLY a JSON object with this exact shape:
+
+{
+  "salesCopy": {
+    "headlines": [ { "headline": "a real sales-page headline", "rationale": "the psychological trigger it uses and why it fits this audience" } ] (3 headlines),
+    "subheadline": "one supporting sentence",
+    "bullets": ["8 benefit-first bullet points pulled from the real chapters/pain points, each starting with an action verb"],
+    "guarantee": "a full money-back guarantee statement in first person, specific to this product"
+  },
+  "marketingAngles": [ { "title": "SHORT PUNCHY AD HEADLINE IN CAPS", "rationale": "the psychological trigger and why it works for this audience" } ] (6 angles, each genuinely different),
+  "socialPosts": [ { "platform": "X/Twitter thread" | "LinkedIn" | "Instagram/TikTok caption" | "Facebook", "content": "the full, ready-to-publish post text" } ] (6 posts, distinct angles: pain point, transformation, behind-the-scenes, social proof, urgency, myth-busting),
+  "emailSequence": [ { "day": "Day 0 — Welcome", "subject": "actual subject line", "preview": "actual preview text", "purpose": "one line on the strategic goal of this email" } ] (7 emails covering: welcome, pain/story, solution, proof, offer, objections, long-term nurture),
+  "youtubeIdeas": [ { "title": "actual clickable video title", "hookStrategy": "exactly what happens in the first 30 seconds and why it hooks viewers" } ] (5 ideas, each based on a real chapter),
+  "launchRoadmap": ["12 sequential, concrete launch steps from finishing the product to first sale, each one sentence"],
+  "ninetyDayChecklist": {
+    "days1to7": ["7 concrete daily-ish actions for research, creation, and validation"],
+    "days8to30": ["7 concrete actions for launch, first sales, and early marketing"],
+    "days31to90": ["7 concrete actions for scaling, automating, and growing"]
+  }
+}
+
+Every piece must reference something specific about this exact product and niche — no generic brand voice, no filler.`,
+  };
+        }
